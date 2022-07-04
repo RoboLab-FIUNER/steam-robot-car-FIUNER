@@ -2,7 +2,7 @@
 // Este ejemplo es el codigo base del robot autonomo esquiva-obstaculo basado en sensor HC-SR04
 // 2022
 
-#include <Ultrasonic.h>
+#include "Ultrasonic.h"
 
 // Pines sensor de ultrasonido
 #define PIN_TRIGGER 12
@@ -21,8 +21,12 @@
 #define MOT_A_en 5
 #define MOT_B_en 6
 
+// Pines reguladores de velocidad. Control por PWM.
+#define VEL_A 150
+#define VEL_B 150
 
-Ultrasonic ultrasonido (PIN_TRIGGER, PIN_ECHO); 
+
+Ultrasonic ultrasonic (PIN_TRIGGER, PIN_ECHO); 
 
 int var1 = 3;       //Pin del Modulo L298N Input1
 int var2 = 4;       //Pin del Modulo L298N Input2
@@ -31,6 +35,9 @@ int var4 = 8;       //Pin del Modulo L298N Input4
 int ena = 5;        //Variable de velocidad
 int enb = 6;        //Veriable de velocidad
 
+  
+const int distance_max = 10;
+const int time_maniover = 500;
 
 
 void adelante();      //Funcion para activar var2 y var3
@@ -40,7 +47,7 @@ void izquierda();     //Funcion para activar var4
 
 
 void distance();     //Funcion para poder controlar el ultrasonido y decidir
-void velocity ();    //Funcion para controlar ena y enb
+void set_velocity ();    //Funcion para controlar ena y enb
 
 void setup() {
 
@@ -51,13 +58,9 @@ void setup() {
   pinMode (MOT_A_en, OUTPUT);    //Declaracion para el motor derecho
   pinMode (MOT_B_en, OUTPUT);    //Declaracion para el motor izquierdo
   
-  int Vel_a = 100 ;
-  int Vel_b = 80 ;
+
   set_velocity();
   
-  const int distance_max = 10;
-  const int time_maniover = 500;
-
 }
 
 
@@ -68,7 +71,7 @@ void loop() {
 
 void distance() {
 
-  if (ultrasonido.Ranging(CM) < distance_max) {
+  if (ultrasonic.read(CM) < distance_max) {
     stop();
     reverse();
     delay(time_maniover);
@@ -126,9 +129,9 @@ void stop() {
 }
 
 
-void set_velocity (Vel_a, Vel_b) {
+void set_velocity () {
   //Controlling speed (0 = off and 255 = max speed):    
-  analogWrite(MOT_A_en, Vel_a); //Velocidad motor derecho
-  analogWrite(MOT_B_en, Vel_b); //Velocidad motor izquierdo
+  analogWrite(MOT_A_en, VEL_A); //Velocidad motor derecho
+  analogWrite(MOT_B_en, VEL_B); //Velocidad motor izquierdo
 
 }
