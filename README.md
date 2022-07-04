@@ -1,8 +1,8 @@
 # steam-robot-car-FIUNER
-STEAM robotic car developed by FI-UNER robotics group oriented to education porpouses.
+STEAM robotic car for education porpouses developed by FI-UNER robotics group
 
 **HARDWARE** 
-/n
+
 1- 3D printed chasis (available in chasis folder)
 2- 1x L298N Motor Driver
 3- 1x Arduino UNO
@@ -14,8 +14,9 @@ STEAM robotic car developed by FI-UNER robotics group oriented to education porp
 *Circuit diagram and connection*
 
 
-**FIRMWARE**
-/n
-*Tools*
+**FIRMWARE** 
 
+*Tools*
+ 
+ 
 *Algorithm*
