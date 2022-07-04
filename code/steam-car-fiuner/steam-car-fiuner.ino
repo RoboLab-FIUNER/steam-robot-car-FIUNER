@@ -1,6 +1,7 @@
 // Script de control de STEAM car FIUNER
 // Este ejemplo es el codigo base del robot autonomo esquiva-obstaculo basado en sensor HC-SR04
-// 2022
+// Ultrasonic library https://github.com/ErickSimoes/Ultrasonic (available to download from Arduino IDE library manager)
+//  - -- 2022 -- -
 
 #include "Ultrasonic.h"
 
