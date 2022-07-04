@@ -1,6 +1,28 @@
+// Script de control de STEAM car FIUNER
+// Este ejemplo es el codigo base del robot autonomo esquiva-obstaculo basado en sensor HC-SR04
+// 2022
+
 #include <Ultrasonic.h>
 
-Ultrasonic ultrasonido (12, 13); //Pin Trigger y echo
+// Pines sensor de ultrasonido
+#define PIN_TRIGGER 12
+#define PIN_ECHO 13
+
+
+// Pines control motor-A
+#define MOT_A_1 3
+#define MOT_A_2 4
+
+// Pines control motor B
+#define MOT_B_1 7
+#define MOT_B_2  8
+
+// Pines reguladores de velocidad. Control por PWM.
+#define MOT_A_en 5
+#define MOT_B_en 6
+
+
+Ultrasonic ultrasonido (PIN_TRIGGER, PIN_ECHO); 
 
 int var1 = 3;       //Pin del Modulo L298N Input1
 int var2 = 4;       //Pin del Modulo L298N Input2
@@ -15,81 +37,98 @@ void adelante();      //Funcion para activar var2 y var3
 void atras();         //Funcion para activar var1 y var4
 void derecha();       //Funcion para activar var1
 void izquierda();     //Funcion para activar var4
-void distancia();     //Funcion para poder controlar el ultrasonido
 
-void velocidad ();    //Funcion para controlar ena y enb
+
+void distance();     //Funcion para poder controlar el ultrasonido y decidir
+void velocity ();    //Funcion para controlar ena y enb
 
 void setup() {
 
-  pinMode (var1, OUTPUT);   //Declaracion del pin var1
-  pinMode (var2, OUTPUT);   //Declaracion del pin var2
-  pinMode (var3, OUTPUT);   //Declaracion del pin var3
-  pinMode (var4, OUTPUT);   //Declaracion del pin var4
-  pinMode (ena, OUTPUT);    //Declaracion para el motor derecho
-  pinMode (enb, OUTPUT);    //Declaracion para el motor izquierdo
+  pinMode (MOT_A_1, OUTPUT);   //Declaracion del pin var1
+  pinMode (MOT_A_2, OUTPUT);   //Declaracion del pin var2
+  pinMode (MOT_B_1, OUTPUT);   //Declaracion del pin var3
+  pinMode (MOT_B_2, OUTPUT);   //Declaracion del pin var4
+  pinMode (MOT_A_en, OUTPUT);    //Declaracion para el motor derecho
+  pinMode (MOT_B_en, OUTPUT);    //Declaracion para el motor izquierdo
+  
+  int Vel_a = 100 ;
+  int Vel_b = 80 ;
+  set_velocity();
+  
+  const int distance_max = 10;
+  const int time_maniover = 500;
 
 }
 
 
 void loop() {
-  distancia();
+  forward();
+  distance();
 }
 
-void distancia() {
+void distance() {
 
-  velocidad ();
-  adelante();
-
-  if (ultrasonido.Ranging(CM) < 10) {
-    atras();
-    delay(700);
-    izquierda();
-    delay(700);
+  if (ultrasonido.Ranging(CM) < distance_max) {
+    stop();
+    reverse();
+    delay(time_maniover);
+    left();
+    delay(time_maniover);
   }
+  
 }
 
 
+void right() {
 
-
-
-void derecha() {
-
-  digitalWrite(var1, HIGH);   
-  digitalWrite(var2, LOW);
-  digitalWrite(var3, LOW);
-  digitalWrite(var4, LOW);
+  digitalWrite(MOT_A_1, HIGH);   
+  digitalWrite(MOT_A_2, LOW);
+  digitalWrite(MOT_B_1, LOW);
+  digitalWrite(MOT_B_2, LOW);
 
 }
 
-void izquierda() {
+void left() {
 
-  digitalWrite(var1, LOW);
-  digitalWrite(var2, LOW);
-  digitalWrite(var3, LOW);
-  digitalWrite(var4, HIGH);
+  digitalWrite(MOT_A_1, LOW);
+  digitalWrite(MOT_A_2, LOW);
+  digitalWrite(MOT_B_1, LOW);
+  digitalWrite(MOT_B_2, HIGH);
 
 }
 
-void adelante() {
-  digitalWrite(var1, LOW);
-  digitalWrite(var2, HIGH);
-  digitalWrite(var3, HIGH);
-  digitalWrite(var4, LOW);
+void forward() {
+  digitalWrite(MOT_A_1, LOW);
+  digitalWrite(MOT_A_2, HIGH);
+  digitalWrite(MOT_B_1, HIGH);
+  digitalWrite(MOT_B_2, LOW);
 
 
 }
 
 
-void atras() {
-  digitalWrite(var1, HIGH);
-  digitalWrite(var2, LOW);
-  digitalWrite(var3, LOW);
-  digitalWrite(var4, HIGH);
-
-
+void reverse() {
+  
+  digitalWrite(MOT_A_1, HIGH);
+  digitalWrite(MOT_A_2, LOW);
+  digitalWrite(MOT_B_1, LOW);
+  digitalWrite(MOT_B_2, HIGH);
+  
 }
-void velocidad () {
-  analogWrite(ena, 100); //Velocidad motor derecho
-  analogWrite(enb, 90); //Velocidad motor izquierdo
+
+void stop() {
+
+  digitalWrite(MOT_A_1, LOW);
+  digitalWrite(MOT_A_2, LOW);
+  digitalWrite(MOT_B_1, LOW);
+  digitalWrite(MOT_B_2, LOW);
+  
+}
+
+
+void set_velocity (Vel_a, Vel_b) {
+  //Controlling speed (0 = off and 255 = max speed):    
+  analogWrite(MOT_A_en, Vel_a); //Velocidad motor derecho
+  analogWrite(MOT_B_en, Vel_b); //Velocidad motor izquierdo
 
 }
