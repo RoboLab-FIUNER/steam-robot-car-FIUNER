@@ -11,67 +11,62 @@
 
 
 // Pines control motor-A
-#define MOT_A_1 3
-#define MOT_A_2 4
+#define MOT_A_1 3 //Pin del Modulo L298N Input1
+#define MOT_A_2 4 //Pin del Modulo L298N Input2
 
 // Pines control motor B
-#define MOT_B_1 7
-#define MOT_B_2  8
+#define MOT_B_1 7 //Pin del Modulo L298N Input3
+#define MOT_B_2  8 //Pin del Modulo L298N Input4
 
 // Pines reguladores de velocidad. Control por PWM.
 #define MOT_A_en 5
 #define MOT_B_en 6
 
-// Pines reguladores de velocidad. Control por PWM.
+// Valores de PWM (0 - 255).
 #define VEL_A 150
 #define VEL_B 150
 
-
-Ultrasonic ultrasonic (PIN_TRIGGER, PIN_ECHO); 
-
-int var1 = 3;       //Pin del Modulo L298N Input1
-int var2 = 4;       //Pin del Modulo L298N Input2
-int var3 = 7;       //Pin del Modulo L298N Input3
-int var4 = 8;       //Pin del Modulo L298N Input4
-int ena = 5;        //Variable de velocidad
-int enb = 6;        //Veriable de velocidad
-
+//Objeto ultrasonido y variables
+Ultrasonic ultrasonic (PIN_TRIGGER, PIN_ECHO);
   
-const int distance_max = 10;
-const int time_maniover = 500;
+const int distance_max = 10 // distancia de detección de obstaculo
+const int time_maniover = 500; // tiempo de duración de maniobra de esquivo
 
 
-void adelante();      //Funcion para activar var2 y var3
-void atras();         //Funcion para activar var1 y var4
-void derecha();       //Funcion para activar var1
-void izquierda();     //Funcion para activar var4
+// funciones de dirrecion del auto
+void forward();      
+void reverse();         
+void right();     
+void left();    
 
 
 void distance();     //Funcion para poder controlar el ultrasonido y decidir
 void set_velocity ();    //Funcion para controlar ena y enb
 
 void setup() {
-
-  pinMode (MOT_A_1, OUTPUT);   //Declaracion del pin var1
-  pinMode (MOT_A_2, OUTPUT);   //Declaracion del pin var2
-  pinMode (MOT_B_1, OUTPUT);   //Declaracion del pin var3
-  pinMode (MOT_B_2, OUTPUT);   //Declaracion del pin var4
-  pinMode (MOT_A_en, OUTPUT);    //Declaracion para el motor derecho
-  pinMode (MOT_B_en, OUTPUT);    //Declaracion para el motor izquierdo
+ //config pines control motores
+  pinMode (MOT_A_1, OUTPUT);   
+  pinMode (MOT_A_2, OUTPUT);  
+  pinMode (MOT_B_1, OUTPUT);  
+  pinMode (MOT_B_2, OUTPUT);   
+  pinMode (MOT_A_en, OUTPUT);    
+  pinMode (MOT_B_en, OUTPUT);    
   
-
+// seteo de velocidad
   set_velocity();
   
 }
 
 
 void loop() {
+  
   forward();
   distance();
+
 }
 
 void distance() {
-
+// Funcion que detecta obtaculos y esquiva.
   if (ultrasonic.read(CM) < distance_max) {
     stop();
     reverse();
